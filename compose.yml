@@ -31,8 +31,8 @@ services:
       - MYSQL_DATABASE=user
     volumes:
       - "db-volume:/var/lib/mysql"
-    ports:
-      - "13306:3306"
+#    ports:
+#      - "13306:3306"
 
   db-test:
     container_name: db-test
@@ -44,8 +44,8 @@ services:
       - MYSQL_DATABASE=test
     volumes:
       - "db-test-volume:/var/lib/mysql"
-    ports:
-      - "23306:3306"
+#    ports:
+#      - "23306:3306"
 
 volumes:
   db-volume:

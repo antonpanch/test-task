@@ -31,28 +31,33 @@ API і до відповіді користувачу.
 Юніт тести були написані для тестування правил валідації. 
 
 ## Як встановити та запустити проект 
-Для запуску проекту згідно опису нижче, необхідно щоб у Вас був встановлений **docker compose**.  
-Для встановлення та запуску проету необхідно: 
+Для запуску проекту згідно опису нижче необхідно, щоб у Вас був встановлений **docker compose**.  
+Для встановлення та запуску проекту необхідно: 
 #### 1) склонувати проект з Github
 ```shell
 git clone https://github.com/antonpanch/test-task.git
+cd test-task
 ```
 #### 2) встановити необхідні залежності за допомогою composer  
 ```shell
 docker compose run -it --rm composer composer install 
 ```
-#### 3) після встановлення пакетів необхідно запустити проект:
+#### 3) Відкрити порти для доступу до БД в файлі compose.yml при необхідності
+Якщо Ви хочете мати доступ до БД напряму з якогось клієнта, Вам необхідно відкрити відповідні порти у файлі compose.yml.  
+По замовченню порти закоментовані, щоб не створювати конфліктів.  
+
+#### 4) після встановлення пакетів необхідно запустити проект:
 ```shell
 docker compose up -d
 ```
-#### 4) Необхідно створити таблиці в БД. Це можна зробити:
+#### 5) Необхідно створити таблиці в БД. Це можна зробити:
 - *~~запустивши міграції~~* запустивши команду
 ```shell
 docker compose exec -it application bin/console db:create-tables 
 ```
 - або вручну скопіювавши sql запити з файлу `application/dump/create-tables-with-roles.sql` 
 та виконавши дані sql запити в БД
-#### 5) створити тестові дані. Це можна зробити:
+#### 6) створити тестові дані. Це можна зробити:
 - *~~запустивши фікстури~~* запустивши команду
 ```shell
 docker compose exec -it application bin/console db:create-test-data
@@ -93,7 +98,7 @@ docker compose exec -it application bin/console db:create-test-data
 | PUT | *~~/api/v1/users/{id}~~*  <br/>/v1/api/users?id={id} | login, pass, phone          | Content-Type: application/json<br/>Authorization: Bearer {token} | 
 
 Сервер запускається за адресою **http://localhost:8800**  
-Приклад запиту: **GET http://localhost:8800/v1/api/users?id=1**
+Приклад запиту: **GET http://localhost:8800/v1/api/users?id=1**  
 
 ## Тести
 Щоб перевірити, що проект працює коректно, можна виконати тести.  
@@ -113,19 +118,19 @@ docker compose exec -it application php vendor/bin/phpunit --testsuite Functiona
 Нижче буде наведено приклади запитів у форматі curl команди, які можна відправляти на API.    
 При необхідності такий запит можні імпортувати в Postman.  
 
-### Створити нового користувача
+### Створити нового користувача (POST запит)
 ```shell
 curl http://localhost:8800/v1/api/users --request POST  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json" --data '{"login":"login-0", "pass":"pass-0", "phone":"phone-0"}'
 ```
-### Отримати інформацію про користувача з id = 1
+### Отримати інформацію про користувача з id = 1 (GET запит)
 ```shell
 curl http://localhost:8800/v1/api/users?id=1 --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json"
 ```
-### Відредагувати користувача з id=5
+### Відредагувати користувача з id=5 (PUT запит)
 ```shell
 curl http://localhost:8800/v1/api/users?id=5 --request PUT  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json" --data '{"login":"5-login", "pass":"5-pass", "phone":"5-phone"}'
 ```
-### Видалити користувача з id = 12
+### Видалити користувача з id = 12 (DELETE запит)
 ```shell
 curl http://localhost:8800/v1/api/users?id=12 --request DELETE  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json"
 ```
