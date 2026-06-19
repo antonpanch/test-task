@@ -1,0 +1,52 @@
+services:
+  composer:
+    container_name: composer
+    build:
+      context: .
+      dockerfile: docker/composer.Dockerfile
+    volumes:
+      - "./application:/app"
+
+  application:
+    container_name: application
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      target: application
+    volumes:
+      - "./application:/application"
+    ports:
+      - "8800:8800"
+    depends_on:
+      - db
+      - db-test
+
+  db:
+    container_name: db
+    image: mysql:9.7.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=user
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+      - MYSQL_DATABASE=user
+    volumes:
+      - "db-volume:/var/lib/mysql"
+    ports:
+      - "13306:3306"
+
+  db-test:
+    container_name: db-test
+    image: mysql:9.7.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+      - MYSQL_DATABASE=test
+    volumes:
+      - "db-test-volume:/var/lib/mysql"
+    ports:
+      - "23306:3306"
+
+volumes:
+  db-volume:
+  db-test-volume:

@@ -1,0 +1,6 @@
+FROM composer
+ARG USER_ID=1000
+ARG USER_NAME=user
+ARG USER_PASSWORD=userpassword
+RUN echo -e "${USER_PASSWORD}\n${USER_PASSWORD}" | adduser -u ${USER_ID} ${USER_NAME}
+USER $USER_NAME
