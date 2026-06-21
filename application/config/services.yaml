@@ -12,6 +12,7 @@ parameters:
     db.database: '%env(DB_NAME)%'
     db.user: '%env(DB_USER)%'
     db.password: '%env(DB_PASSWORD)%'
+    secret_key: '%env(SECRET_KEY)%'
 
 services:
     # default configuration for services in *this* file
@@ -38,6 +39,24 @@ services:
             $databaseName: '%db.database%'
             $userName: '%db.user%'
             $password: '%db.password%'
+
+    App\Application\Password\PasswordEncrypter:
+        arguments:
+            $secretKey: '%secret_key%%'
+
+    # one of 3 password strategies are available in order to change password before storing to database
+    # 1) App\Application\Password\EncryptedPasswordStrategy - save password encrypted
+    # 2) App\Application\Password\HashedPasswordStrategy - save password hash
+    # 3) App\Application\Password\PlainPasswordStrategy - save password as plain text without modifications
+    App\Application\Password\EncryptedPasswordStrategy: ~
+    App\Application\Password\HashedPasswordStrategy: ~
+    App\Application\Password\PlainPasswordStrategy:
+        public: true
+
+    # assign the password strategy you want to use to the App\Application\Password\PasswordStrategyInterface interface
+    App\Application\Password\PasswordStrategyInterface: '@App\Application\Password\EncryptedPasswordStrategy'
+    # App\Application\Password\PasswordStrategyInterface: '@App\Application\Password\HashedPasswordStrategy'
+    # App\Application\Password\PasswordStrategyInterface: '@App\Application\Password\PlainPasswordStrategy'
 
     App\Infrastructure\Storage\Pdo\Mysql\MysqlCommandExecutor: ~
     App\Infrastructure\Storage\Pdo\Repository\PdoUserRepository: ~

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Storage\Pdo\Repository;
 
+use App\Application\Password\PasswordStrategyInterface;
 use App\Domain\Entity\Role;
 use App\Domain\Entity\User;
 use App\Domain\Exception\DomainValidationException;
@@ -23,17 +24,21 @@ use RuntimeException;
 class PdoUserRepository implements UserRepositoryInterface
 {
     private readonly PDO $connection;
+    private readonly PasswordStrategyInterface $passwordStrategy;
 
-    public function __construct(PdoConnectionInterface $pdoConnection)
-    {
+    public function __construct(
+        PdoConnectionInterface $pdoConnection,
+        PasswordStrategyInterface $passwordStrategy
+    ) {
         $this->connection = $pdoConnection->getPDO();
+        $this->passwordStrategy = $passwordStrategy;
     }
 
     public function create(User $user): User
     {
         $this->checkForDuplicatesOnLoginAndPassword($user);
         $login = $user->getLogin();
-        $password = $user->getPassword();
+        $password = $this->passwordStrategy->getModifiedVersion(new Password($user->getPassword()));
         $phoneNumber = $user->getPhoneNumber();
         $roleId = $user->getRoleId();
 
@@ -48,7 +53,7 @@ class PdoUserRepository implements UserRepositoryInterface
         $id = $this->connection->lastInsertId();
         return new User(
             new Login($login),
-            new Password($password),
+            $this->passwordStrategy->getPasswordFromModifiedVersion($password),
             new PhoneNumber($phoneNumber),
             new Role(
                 new RoleName($user->getRoleName()),
@@ -63,27 +68,37 @@ class PdoUserRepository implements UserRepositoryInterface
         $loginValue = $login->getValue();
         $passwordValue = $password->getValue();
         $query = "SELECT u.id AS userId, login, pass, phone, r.id AS roleId, name FROM users u INNER JOIN roles r";
-        $query .= " WHERE u.login = :login AND u.pass = :password";
+
+        $query .= " WHERE u.login = :login";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':login', $loginValue);
-        $statement->bindParam(':password', $passwordValue);
+
 
         $statement->execute();
-        $row = $statement->fetch(Pdo::FETCH_ASSOC);
-        if ($row === false) {
+        $rows = $statement->fetchAll(Pdo::FETCH_ASSOC);
+
+        if ($rows === false) {
             throw new EntityNotFoundException("Couldn't find user by login and password");
         }
-        return new User(
-            new Login($row['login']),
-            new Password($row['pass']),
-            new PhoneNumber($row['phone']),
-            new Role(
-                new RoleName($row['name']),
-                new RoleId($row['roleId'])
-            ),
-            new UserId($row['userId'])
-        );
-
+        foreach ($rows as $row) {
+            $isPasswordCorrect = $this->passwordStrategy->verifyPasswordEqualsPasswordInModifiedVersion(
+                new Password($passwordValue), $row['pass']
+            );
+            if (!$isPasswordCorrect) {
+                continue;
+            }
+            return new User(
+                new Login($row['login']),
+                $this->passwordStrategy->getPasswordFromModifiedVersion($row['pass']),
+                new PhoneNumber($row['phone']),
+                new Role(
+                    new RoleName($row['name']),
+                    new RoleId($row['roleId'])
+                ),
+                new UserId($row['userId'])
+            );
+        }
+        throw new EntityNotFoundException("Couldn't find user by login and password");
     }
 
     public function findById(UserId $id): User
@@ -93,7 +108,6 @@ class PdoUserRepository implements UserRepositoryInterface
         $query .= " FROM users u INNER JOIN roles r ON u.role_id = r.id WHERE u.id = :id";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':id', $userId, PDO::PARAM_INT);
-
         $statement->execute();
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         if ($row === false) {
@@ -101,7 +115,7 @@ class PdoUserRepository implements UserRepositoryInterface
         }
         return new User(
             new Login($row['login']),
-            new Password($row['pass']),
+            $this->passwordStrategy->getPasswordFromModifiedVersion($row['pass']),
             new PhoneNumber($row['phone']),
             new Role(
                 new RoleName($row['name']),
@@ -109,7 +123,6 @@ class PdoUserRepository implements UserRepositoryInterface
             ),
             new UserId($row['userId'])
         );
-
     }
 
     private function checkForDuplicatesOnLoginAndPassword(User $user): void
@@ -121,8 +134,6 @@ class PdoUserRepository implements UserRepositoryInterface
             return;
         }
     }
-
-
 
     public function delete(UserId $userId): void
     {
@@ -137,7 +148,7 @@ class PdoUserRepository implements UserRepositoryInterface
     {
         $id = $userId->getValue();
         $loginValue = $login->getValue();
-        $passwordValue = $password->getValue();
+        $passwordValue = $this->passwordStrategy->getModifiedVersion(new Password($password->getValue()));
         $phone = $phoneNumber->getValue();
 
         $this->connection->beginTransaction();
@@ -160,7 +171,7 @@ class PdoUserRepository implements UserRepositoryInterface
 
             return new User(
                 clone $login,
-                clone $password,
+                $this->passwordStrategy->getPasswordFromModifiedVersion($passwordValue),
                 clone $phoneNumber,
                 new Role(
                     new RoleName($row['name']),

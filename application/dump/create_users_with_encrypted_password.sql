@@ -1,0 +1,16 @@
+INSERT INTO users (id, login, pass, phone, role_id) VALUES
+(1, 'root1', '+3SpYHMTz2ysJY0KX0JiPDxX2q8TATXN3nO8OD1fAGkRp6sxaHs=', 'phone1', 1),
+(2, 'root2', '+3SpYHMTz2ysJY0KX0JiPDxX2q8TATXN3nO8OD1fAGkRp6sxaHs=', 'phone2', 1),
+(3, 'root3', '+3SpYHMTz2ysJY0KX0JiPDxX2q8TATXN3nO8OD1fAGkRp6sxaHs=', 'phone3', 1),
+(4, 'root4', '+3SpYHMTz2ysJY0KX0JiPDxX2q8TATXN3nO8OD1fAGkRp6sxaHs=', 'phone4', 1),
+(5, 'root5', '+3SpYHMTz2ysJY0KX0JiPDxX2q8TATXN3nO8OD1fAGkRp6sxaHs=', 'phone5', 1),
+(6, 'user1', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone6', 2),
+(7, 'user2', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone7', 2),
+(8, 'user3', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone8', 2),
+(9, 'user4', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone9', 2),
+(10, 'user5', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone10', 2),
+(11, 'user6', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone11', 2),
+(12, 'user7', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone12', 2),
+(13, 'user8', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone13', 2),
+(14, 'user9', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone14', 2),
+(15, 'user10', 'gR1hAQUeu/0ON5DeX+lQenleBNOuGsyeIww1S0ZfpQTSfN0C0o4=', 'phone15', 2);
