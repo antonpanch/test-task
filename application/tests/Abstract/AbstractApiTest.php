@@ -2,6 +2,7 @@
 
 namespace App\Tests\Abstract;
 
+use App\Application\Password\PasswordStrategyInterface;
 use App\Application\User\CreateUserUseCase;
 use App\Domain\Entity\User;
 use App\Infrastructure\Storage\Pdo\Mysql\MysqlCommandExecutor;
@@ -21,7 +22,8 @@ class AbstractApiTest extends WebTestCase
 
         $this->databaseService = new DatabaseService(
             $this->getContainer()->get(MysqlCommandExecutor::class),
-            $this->getContainer()->get(CreateUserUseCase::class)
+            $this->getContainer()->get(CreateUserUseCase::class),
+            $this->getContainer()->get(PasswordStrategyInterface::class)
         );
         $this->databaseService->dropTables();
         $this->databaseService->createTables();

@@ -1,0 +1,16 @@
+INSERT INTO tokens (user_id, expiration_date, token) VALUES
+(1, '2026-07-01 00:00:00', 'token_for_root1'),
+(2, '2026-07-01 00:00:00', 'token_for_root2'),
+(3, '2026-07-01 00:00:00', 'token_for_root3'),
+(4, '2026-07-01 00:00:00', 'token_for_root4'),
+(5, '2026-07-01 00:00:00', 'token_for_root5'),
+(6, '2026-07-01 00:00:00', 'token_for_user1'),
+(7, '2026-07-01 00:00:00', 'token_for_user2'),
+(8, '2026-07-01 00:00:00', 'token_for_user3'),
+(9, '2026-07-01 00:00:00', 'token_for_user4'),
+(10, '2026-07-01 00:00:00', 'token_for_user5'),
+(11, '2026-07-01 00:00:00', 'token_for_user6'),
+(12, '2026-07-01 00:00:00', 'token_for_user7'),
+(13, '2026-07-01 00:00:00', 'token_for_user8'),
+(14, '2026-07-01 00:00:00', 'token_for_user9'),
+(15, '2026-07-01 00:00:00', 'token_for_user10');

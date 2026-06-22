@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Tests\Functional\User;
+namespace App\Tests\Functional\Api\Version2;
 
 use App\Tests\Abstract\AbstractUsersApiTest;
 use Symfony\Component\HttpFoundation\Response;
 
 class GetUserApiTest extends AbstractUsersApiTest
 {
+    protected const USERS_API_URI = '/api/v2/users';
+
     public function testGetSelfUserWithRoleRoot()
     {
         $this->client->jsonRequest(
             'GET',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleRoot ]
         );
@@ -27,7 +29,7 @@ class GetUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'GET',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleUser ]
         );
@@ -43,7 +45,7 @@ class GetUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'GET',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleRoot ]
         );
@@ -59,7 +61,7 @@ class GetUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'GET',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleUser ]
         );

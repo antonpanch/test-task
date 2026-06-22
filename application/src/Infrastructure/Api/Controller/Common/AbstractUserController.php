@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Api\Controller\User;
+namespace App\Infrastructure\Api\Controller\Common;
 
 use App\Application\Authorization\AuthService;
 use App\Domain\Entity\User;
@@ -29,15 +29,5 @@ abstract class AbstractUserController extends ApiController
     {
         $authorizationHeader = $this->request->headers->get('Authorization');
         return str_replace('Bearer ', '', $authorizationHeader);
-    }
-
-    protected function formatUserDataForResponse(User $user)
-    {
-        return [
-            'id' => $user->getId(),
-            'login' => $user->getLogin(),
-            'pass' => $user->getPassword(),
-            'phone' => $user->getPhoneNumber()
-        ];
     }
 }

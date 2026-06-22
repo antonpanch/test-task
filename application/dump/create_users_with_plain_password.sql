@@ -1,0 +1,16 @@
+INSERT INTO users (id, login, pass, phone, role_id) VALUES
+(1, 'root1', 'rootpass', 'phone1', 1),
+(2, 'root2', 'rootpass', 'phone2', 1),
+(3, 'root3', 'rootpass', 'phone3', 1),
+(4, 'root4', 'rootpass', 'phone4', 1),
+(5, 'root5', 'rootpass', 'phone5', 1),
+(6, 'user1', 'userpass', 'phone6', 2),
+(7, 'user2', 'userpass', 'phone7', 2),
+(8, 'user3', 'userpass', 'phone8', 2),
+(9, 'user4', 'userpass', 'phone9', 2),
+(10, 'user5', 'userpass', 'phone10', 2),
+(11, 'user6', 'userpass', 'phone11', 2),
+(12, 'user7', 'userpass', 'phone12', 2),
+(13, 'user8', 'userpass', 'phone13', 2),
+(14, 'user9', 'userpass', 'phone14', 2),
+(15, 'user10', 'userpass', 'phone15', 2);

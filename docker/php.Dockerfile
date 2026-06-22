@@ -21,7 +21,3 @@ RUN echo -e "${USER_PASSWORD}\n${USER_PASSWORD}" | adduser -u ${USER_ID} ${USER_
     cp "${PHP_INI_DIR}/php.ini-${APPLICATION_ENV}" "${PHP_INI_DIR}/php.ini"
 USER $USER_NAME
 CMD ["php", "-S", "0.0.0.0:8800", "-t", "/application/public"]
-
-
-
-

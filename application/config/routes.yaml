@@ -9,23 +9,55 @@
 
 #controllers:
 #    resource: routing.controllers
-api_auth_token:
+
+#--------
+# V1 API
+# -------
+api_v1_auth_token:
     path: /v1/api/auth/token
-    controller: App\Infrastructure\Api\Controller\Authorization\AuthController::generateToken
+    controller: App\Infrastructure\Api\Controller\Common\AuthController::generateToken
     methods: POST
-api_create_user:
+api_v1_create_user:
     path: /v1/api/users
-    controller: App\Infrastructure\Api\Controller\User\CreateUserController::createUser
+    controller: App\Infrastructure\Api\Controller\Version1\UserController::createUser
     methods: POST
-api_get_user:
+api_v1_get_user:
     path: /v1/api/users
-    controller: App\Infrastructure\Api\Controller\User\GetUserController::getUser
+    controller: App\Infrastructure\Api\Controller\Version1\UserController::getUser
     methods: GET
-api_update_user:
+api_v1_update_user:
     path: /v1/api/users
-    controller: App\Infrastructure\Api\Controller\User\UpdateUserController::updateUser
+    controller: App\Infrastructure\Api\Controller\Version1\UserController::updateUser
     methods: PUT
-api_delete_user:
+api_v1_delete_user:
     path: /v1/api/users
-    controller: App\Infrastructure\Api\Controller\User\DeleteUserController::deleteUser
+    controller: App\Infrastructure\Api\Controller\Version1\UserController::deleteUser
     methods: DELETE
+
+#---------
+# API V2
+#---------
+api_v2_auth_token:
+    path: /api/v2/auth/token
+    controller: App\Infrastructure\Api\Controller\Common\AuthController::generateToken
+    methods: POST
+api_v2_create_user:
+    path: /api/v2/users
+    controller: App\Infrastructure\Api\Controller\Version2\UserController::createUser
+    methods: POST
+api_v2_get_user:
+    path: /api/v2/users/{id}
+    controller: App\Infrastructure\Api\Controller\Version2\UserController::getUser
+    methods: GET
+api_v2_update_user:
+    path: /api/v2/users/{id}
+    controller: App\Infrastructure\Api\Controller\Version2\UserController::updateUser
+    methods: PUT
+api_v2_delete_user:
+    path: /api/v2/users/{id}
+    controller: App\Infrastructure\Api\Controller\Version2\UserController::deleteUser
+    methods: DELETE
+api_v2_get_users:
+    path: /api/v2/users
+    controller: App\Infrastructure\Api\Controller\Version2\UserController::getUsers
+    methods: GET

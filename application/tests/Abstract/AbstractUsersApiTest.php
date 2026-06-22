@@ -8,8 +8,6 @@ use App\Domain\ValueObject\Role\RoleName;
 
 abstract class AbstractUsersApiTest extends AbstractApiTest
 {
-    protected const USERS_API_URI = '/v1/api/users';
-
     protected const CREATED_ROOT_LOGIN = 'root_1';
     protected const CREATED_ROOT_PASSWORD = 'pass_1';
     protected const CREATED_ROOT_PHONE = 'phone1';
@@ -61,7 +59,8 @@ abstract class AbstractUsersApiTest extends AbstractApiTest
         string $phone,
         ?int $id = null
     ) {
-        $data = $this->getFieldsFromResponse();
+        $response = $this->getFieldsFromResponse();
+        $data = $response['data'];
         $this->assertEquals(4, count($data));
 
         $this->assertEquals($login, $data['login']);

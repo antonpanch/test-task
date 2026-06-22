@@ -28,7 +28,7 @@ Application Layer також не залежить від будь-яких па
 Найбільшу увагу було приділено функціональним тестам, оскільки вони тестують повну роботу системи від запиту до 
 API і до відповіді користувачу.  
 Окремо було написано інтеграційні тести для тестування репозиторію для роботи з MySql.  
-Юніт тести були написані для тестування правил валідації. 
+Модульні тести були написані для тестування правил валідації та стратегій збереження пароля.
 
 ## Як встановити та запустити проект 
 Для запуску проекту згідно опису нижче необхідно, щоб у Вас був встановлений **docker compose**.  
@@ -50,14 +50,22 @@ docker compose run -it --rm composer composer install
 ```shell
 docker compose up -d
 ```
-#### 5) Необхідно створити таблиці в БД. Це можна зробити:
+#### 5) При необхідно (необовʼязково) обрати стратегію, як буде зберігати пароль в БД. 
+Доступно 3 стратегії:
+1) у вигляді хешу
+2) у зашифрованому вигляді за допомогою секретного ключа
+3) у вигляді відкритого тексту  
+По замовчуванню вказана стратегія збереження у шифрованому вигляді.  
+Деталі описані в [документації щодо збереження пароля](docs/password.md).  
+
+#### 6) Необхідно створити таблиці в БД. Це можна зробити:
 - *~~запустивши міграції~~* запустивши команду
 ```shell
 docker compose exec -it application bin/console db:create-tables 
 ```
 - або вручну скопіювавши sql запити з файлу `application/dump/create-tables-with-roles.sql` 
 та виконавши дані sql запити в БД
-#### 6) створити тестові дані. Це можна зробити:
+#### 7) створити тестові дані. Це можна зробити:
 - *~~запустивши фікстури~~* запустивши команду
 ```shell
 docker compose exec -it application bin/console db:create-test-data
@@ -86,19 +94,7 @@ docker compose exec -it application bin/console db:create-test-data
 
 
 Ці дані можна використовувати для того, щоб робити запити до API.  
-Можна робити наступні запити:
-
-
-| Метод | Ендпоінт                                             | Обовʼязкові поля при запиті | Обов'язкові заголовки                                            | 
-|-------|------------------------------------------------------|-----------------------------|------------------------------------------------------------------|
-| POST  | *~~/api/v1/auth/token~~* <br/>/v1/api/auth/token     | login, pass                 | Content-Type: application/json  | 
-| GET   | *~~/api/v1/users/{id}~~*  <br/>/v1/api/users?id={id} | -                           | Content-Type: application/json<br/>Authorization: Bearer {token} | 
-| POST | *~~/api/v1/users~~*  <br/>/v1/api/users              | login, pass, phone          | Content-Type: application/json<br/>Authorization: Bearer {token} | 
-| DELETE | *~~/api/v1/users/{id}~~*  <br/>/v1/api/users?id={id} | -                           | Content-Type: application/json<br/>Authorization: Bearer {token} | 
-| PUT | *~~/api/v1/users/{id}~~*  <br/>/v1/api/users?id={id} | login, pass, phone          | Content-Type: application/json<br/>Authorization: Bearer {token} | 
-
-Сервер запускається за адресою **http://localhost:8800**  
-Приклад запиту: **GET http://localhost:8800/v1/api/users?id=1**  
+Робота з API описана на [окремій сторінці](docs/api.md)
 
 ## Тести
 Щоб перевірити, що проект працює коректно, можна виконати тести.  
@@ -106,31 +102,15 @@ docker compose exec -it application bin/console db:create-test-data
 ```shell
 docker compose exec -it application php vendor/bin/phpunit
 ```
-Або можна запускати окремо кожен вид(suite) тестів (функціональні, інтеграційні, юніт):
+Або можна запускати окремо кожен вид(suite) тестів (функціональні, інтеграційні, модульні):
 ```shell
 docker compose exec -it application php vendor/bin/phpunit --testsuite Unit
 docker compose exec -it application php vendor/bin/phpunit --testsuite Integration
 docker compose exec -it application php vendor/bin/phpunit --testsuite Functional
 ```
 
-## Приклади запитів
-Для роботи з API можна використовувати різні інструменти, наприклад curl або Postman.  
-Нижче буде наведено приклади запитів у форматі curl команди, які можна відправляти на API.    
-При необхідності такий запит можні імпортувати в Postman.  
+### Зберігання secrets
+Пароль до БД та secretKey були додані до .env файлу для швидкості розгортання проекту. 
+В умовах реально запущеного проекту так зберігати secrets не варто. 
 
-### Створити нового користувача (POST запит)
-```shell
-curl http://localhost:8800/v1/api/users --request POST  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json" --data '{"login":"login-0", "pass":"pass-0", "phone":"phone-0"}'
-```
-### Отримати інформацію про користувача з id = 1 (GET запит)
-```shell
-curl http://localhost:8800/v1/api/users?id=1 --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json"
-```
-### Відредагувати користувача з id=5 (PUT запит)
-```shell
-curl http://localhost:8800/v1/api/users?id=5 --request PUT  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json" --data '{"login":"5-login", "pass":"5-pass", "phone":"5-phone"}'
-```
-### Видалити користувача з id = 12 (DELETE запит)
-```shell
-curl http://localhost:8800/v1/api/users?id=12 --request DELETE  --header "Authorization: Bearer token_for_root1" --header "Content-Type: application/json"
-```
+

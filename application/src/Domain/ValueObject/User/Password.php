@@ -8,7 +8,7 @@ use App\Domain\Validation\Rules\StringMaxLength;
 use App\Domain\Validation\Rules\StringMinLength;
 use App\Domain\Validation\Validator;
 
-class Password
+class Password implements PasswordInterface
 {
     public const PASSWORD_MAX_LENGTH = 8;
     public const PASSWORD_MIN_LENGTH = 5;

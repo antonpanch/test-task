@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Tests\Functional\User;
+namespace App\Tests\Functional\Api\Version2;
 
 use App\Tests\Abstract\AbstractUsersApiTest;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateUserApiTest extends AbstractUsersApiTest
 {
+    protected const USERS_API_URI = '/api/v2/users';
+
     public function testCreateUserWithRootRole()
     {
         $this->client->jsonRequest(

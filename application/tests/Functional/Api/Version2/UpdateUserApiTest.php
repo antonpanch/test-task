@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Tests\Functional\User;
+namespace App\Tests\Functional\Api\Version2;
 
 use App\Tests\Abstract\AbstractUsersApiTest;
 use Symfony\Component\HttpFoundation\Response;
 
 class UpdateUserApiTest extends AbstractUsersApiTest
 {
+    protected const USERS_API_URI = '/api/v2/users';
+
     public function testUpdateSelfUserWithRoleRoot()
     {
         $this->client->jsonRequest(
             'PUT',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
             [
                 'login' => self::USER_LOGIN_2,
                 'pass' => self::USER_PASSWORD_2,
@@ -31,7 +33,7 @@ class UpdateUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'PUT',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
             [
                 'login' => self::USER_LOGIN_2,
                 'pass' => self::USER_PASSWORD_2,
@@ -51,7 +53,7 @@ class UpdateUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'PUT',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
             [
                 'login' => self::USER_LOGIN_2,
                 'pass' => self::USER_PASSWORD_2,
@@ -71,7 +73,7 @@ class UpdateUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'PUT',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
             [
                 'login' => 'login0',
                 'pass' => 'pass0',

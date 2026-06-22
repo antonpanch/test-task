@@ -6,21 +6,21 @@ namespace App\Domain\Entity;
 
 use App\Domain\ValueObject\Role\Permission;
 use App\Domain\ValueObject\User\Login;
-use App\Domain\ValueObject\User\Password;
+use App\Domain\ValueObject\User\PasswordInterface;
 use App\Domain\ValueObject\User\PhoneNumber;
 use App\Domain\ValueObject\User\UserId;
 
 class User
 {
     private readonly Login $login;
-    private readonly Password $password;
+    private readonly PasswordInterface $password;
     private readonly PhoneNumber $phoneNumber;
     private readonly Role $role;
     private ?UserId $id;
 
     public function __construct(
         Login $login,
-        Password $password,
+        PasswordInterface $password,
         PhoneNumber $phoneNumber,
         Role $role,
         ?UserId $id = null

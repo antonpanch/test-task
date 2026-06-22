@@ -32,18 +32,6 @@ class MysqlCommandExecutor
         $this->executeSql($sqlQuery);
     }
 
-    public function executeSqlInTransaction(string $sql): void
-    {
-        try {
-            $this->connection->beginTransaction();
-            $this->connection->exec($sql);
-            $this->connection->commit();
-        } catch (Throwable $t) {
-            $this->connection->rollBack();
-            $this->processThrowable($t);
-        }
-    }
-
     public function executeSql(string $sql): void
     {
         try {
