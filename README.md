@@ -108,3 +108,9 @@ docker compose exec -it application php vendor/bin/phpunit --testsuite Unit
 docker compose exec -it application php vendor/bin/phpunit --testsuite Integration
 docker compose exec -it application php vendor/bin/phpunit --testsuite Functional
 ```
+
+### Зберігання secrets
+Пароль до БД та secretKey були додані до .env файлу для швидкості розгортання проекту. 
+В умовах реально запущеного проекту так зберігати secrets не варто. 
+
+
