@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Tests\Functional\User;
+namespace App\Tests\Functional\Api\Version2;
 
 use App\Tests\Abstract\AbstractUsersApiTest;
 use Symfony\Component\HttpFoundation\Response;
 
 class DeleteUserApiTest extends AbstractUsersApiTest
 {
+    protected const USERS_API_URI = '/api/v2/users';
+
     public function testDeleteUserAsRoot()
     {
         $this->client->jsonRequest(
             'DELETE',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleUser->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleRoot ]
         );
@@ -22,7 +24,7 @@ class DeleteUserApiTest extends AbstractUsersApiTest
     {
         $this->client->jsonRequest(
             'DELETE',
-            sprintf("%s?id=%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
+            sprintf("%s/%d", self::USERS_API_URI, $this->userWithRoleRoot->getId()),
             [],
             [ 'HTTP_AUTHORIZATION' => 'Bearer ' . $this->tokenForRoleUser ]
         );

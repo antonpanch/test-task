@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Functional\Auth;
+namespace App\Tests\Functional\Api\Common;
 
 use App\Domain\Entity\User;
 use App\Domain\ValueObject\Role\RoleName;
@@ -40,7 +40,7 @@ class GetTokenTest extends AbstractApiTest
         );
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertArrayHasKey('token', $responseData);
+        $this->assertArrayHasKey('token', $responseData['data']);
     }
 
     public function testGetTokenWithWrongPassword()

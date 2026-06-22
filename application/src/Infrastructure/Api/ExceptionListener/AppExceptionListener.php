@@ -27,7 +27,11 @@ class AppExceptionListener
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
             $message = 'An error occurred';
         }
-        $data = ['error' => $message];
+        $data = [
+            'error' => [
+                'message' => $message
+            ]
+        ];
         $event->setResponse(new JsonResponse($data, $statusCode));
     }
 }

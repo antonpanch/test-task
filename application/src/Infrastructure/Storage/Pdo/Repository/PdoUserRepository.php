@@ -10,6 +10,8 @@ use App\Domain\Entity\User;
 use App\Domain\Exception\DomainValidationException;
 use App\Domain\Exception\EntityNotFoundException;
 use App\Domain\Repository\UserRepositoryInterface;
+use App\Domain\ValueObject\Pagination\AfterId;
+use App\Domain\ValueObject\Pagination\PerPage;
 use App\Domain\ValueObject\Role\RoleId;
 use App\Domain\ValueObject\Role\RoleName;
 use App\Domain\ValueObject\User\Login;
@@ -68,8 +70,7 @@ class PdoUserRepository implements UserRepositoryInterface
         $loginValue = $login->getValue();
         $passwordValue = $password->getValue();
         $query = "SELECT u.id AS userId, login, pass, phone, r.id AS roleId, name FROM users u INNER JOIN roles r";
-
-        $query .= " WHERE u.login = :login";
+        $query .= " ON u.role_id = r.id WHERE u.login = :login";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':login', $loginValue);
 
@@ -183,5 +184,36 @@ class PdoUserRepository implements UserRepositoryInterface
             $this->connection->rollBack();
             throw new RuntimeException("Couldn't update user");
         }
+    }
+
+    public function getAll(AfterId $afterId, PerPage $perPage): array
+    {
+        $id = $afterId->getValue();
+        $usersPerPage = $perPage->getValue();
+        $query = "SELECT u.id AS userId, login, pass, phone, r.id AS roleId, name FROM users u INNER JOIN roles r";
+        $query .= " ON u.role_id = r.id WHERE u.id > :id LIMIT :limit";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $usersPerPage, PDO::PARAM_INT);
+        $statement->execute();
+        $rows = $statement->fetchAll(Pdo::FETCH_ASSOC);
+        if ($rows === false) {
+            return [];
+        }
+        $users = [];
+        foreach ($rows as $row) {
+            $user = new User(
+                new Login($row['login']),
+                $this->passwordStrategy->getPasswordFromModifiedVersion($row['pass']),
+                new PhoneNumber($row['phone']),
+                new Role(
+                    new RoleName($row['name']),
+                    new RoleId($row['roleId'])
+                ),
+                new UserId($row['userId'])
+            );
+            $users[] = $user;
+        }
+        return $users;
     }
 }
