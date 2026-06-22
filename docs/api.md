@@ -36,6 +36,8 @@
 | DELETE | /api/v2/users/{id} | -                           | -                           | Content-Type: application/json<br/>Authorization: Bearer {token}  | 
 | PUT    | /api/v2/users/{id} | login, pass, phone          | -                           | Content-Type: application/json<br/>Authorization: Bearer {token}  | 
 | GET    | /api/v2/users      | -                           | perPage, afterId            | Content-Type: application/json<br/>Authorization: Bearer {token}  |
+
+
 При отриманні списка користувачів пагінація зроблена за допомогою id,
 щоб уникнути проблем з швидкістю при реалізації на limit + offset
 на великих обʼємах даних.  
